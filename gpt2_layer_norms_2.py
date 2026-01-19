@@ -25,7 +25,7 @@ def inspect_hidden_states(model, inputs, inspector_func):
 
     for gpt_block in model.transformer.h:
         # print(gpt_block.named_modules)
-        hooks.append(gpt_block.mlp.register_forward_hook(
+        hooks.append(gpt_block.register_forward_hook(
             lambda module, inputs, outputs: norms.append(inspector_func(outputs[0], dim=-1).mean()))
         )
 
@@ -53,7 +53,7 @@ QUESTION_INDEX = 0
 
 inputs = tokenizer(format_question(QUESTION_INDEX), return_tensors='pt')
 
-plt.title(f'Average Mean, L2 Norm, and Variance of Residual Contributions for Question #{QUESTION_INDEX}')
+plt.title(f'Average Mean, L2 Norm, and Variance of Residual Streams for Question #{QUESTION_INDEX}')
 
 x_values = [f'layer #{i}' for i in range(1, len(model.transformer.h) + 1)]
 
